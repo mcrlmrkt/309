@@ -1,0 +1,38 @@
+body{
+	background: #00BA9F;
+	text-align: center;
+	color:#373947;
+	font-family: 'Aldrich', sans-serif;
+	font-weight: 100;
+	font-size: 2vw;
+}
+h1{
+	margin:3%;
+}
+h4{
+	color:#373947;
+}
+#main{
+	position: absolute;
+	left:0;
+	right:0;
+	margin:auto;
+	text-align: left;
+	width:30%;
+}
+#start{
+	width:60%;
+	padding-top: 5%;
+	padding-bottom: 5%;
+	border:none;
+	background-color: #BA4F54;
+	font-size:3.5vw;
+	color:#373947;
+	border-radius: 25px;
+	margin:5%;
+}
+#start:hover{
+	background-color: #FFB085;
+	cursor: pointer;
+	color:#BA4F54;
+}
