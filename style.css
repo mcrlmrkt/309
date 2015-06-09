@@ -8,31 +8,35 @@ body{
 	color:#373947;
 	font-family: 'Aldrich', sans-serif;
 	font-weight: 100;
-	font-size: 2vw;
+	font-size: 15px;
 }
 h1{
 	margin:3%;
+	font-size: 50px;
 }
 h4{
+	font-size: 30px;
 	color:#373947;
 }
+header{
+	margin:50px;
+}
 #main{
-	position: absolute;
+	position: relative;
 	left:0;
 	right:0;
 	margin:auto;
 	text-align: left;
-	width:30%;
+	width:500px;
 }
 #start{
-	width:60%;
-	padding-top: 5%;
-	padding-bottom: 5%;
+	padding:20px;
 	border:none;
 	background-color: #BA4F54;
-	font-size:3.5vw;
+	font-size:40px;
 	color:#373947;
 	border-radius: 25px;
+	letter-spacing: 5px;
 	margin:10%;
 }
 #start:hover{
