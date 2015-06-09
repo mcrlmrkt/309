@@ -1,3 +1,7 @@
+html, body, h1, h2, h3, h4, h5, h6{
+	margin:0;
+	padding:0;
+}
 body{
 	background: #00BA9F;
 	text-align: center;
@@ -29,10 +33,42 @@ h4{
 	font-size:3.5vw;
 	color:#373947;
 	border-radius: 25px;
-	margin:5%;
+	margin:10%;
 }
 #start:hover{
 	background-color: #FFB085;
 	cursor: pointer;
 	color:#BA4F54;
+	margin:10%;
+}
+#menu_bar{
+	background-color: #BA4F54;
+	width:380px;
+	padding: 0.5%;
+	margin:0.5%;
+	margin-bottom: 0;
+	position: relative;
+	overflow: scroll;
+	display: block;
+	font-size: 30px;
+}
+#menu_bar span{
+	width:30%;
+	margin:0;
+	padding:0;
+	display: inline-block;
+}
+#timer{
+	text-align: left;
+}
+#score{
+	text-align: right;
+}
+#board{
+	background: #F8DCAD;
+	width:375px;
+	height:500px;
+	position:relative;
+	display: block;
+	margin: 0 1.2%;
 }
