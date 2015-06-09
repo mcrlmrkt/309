@@ -18,7 +18,7 @@ h4{
 	font-size: 30px;
 	color:#373947;
 }
-header{
+#home{
 	margin:50px;
 }
 #main{
@@ -27,7 +27,7 @@ header{
 	right:0;
 	margin:auto;
 	text-align: left;
-	width:500px;
+	width:400px;
 }
 #start{
 	padding:20px;
