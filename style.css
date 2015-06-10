@@ -1,3 +1,7 @@
+html{
+	width:400px;
+	height:600px;
+}
 html, body, h1, h2, h3, h4, h5, h6{
 	margin:0;
 	padding:0;
@@ -16,10 +20,14 @@ h1{
 }
 h4{
 	font-size: 30px;
-	color:#373947;
 }
 #home{
-	margin:50px;
+	margin-top: 50px;
+	margin-bottom: 50px;
+}
+#main span{
+	text-align: center;
+	display: inline-block;
 }
 #main{
 	position: relative;
@@ -29,7 +37,23 @@ h4{
 	text-align: left;
 	width:400px;
 }
+#level{
+	width: 55%;
+	color:#fff1a9;
+	text-align: center;
+}
+#level1{
+	width: 15%;
+}
+#hs{
+	width:75%;
+}
+#high_score{
+	width:15%;
+	color:#8BDFBD;
+}
 #start{
+	margin:0;
 	padding:20px;
 	border:none;
 	background-color: #BA4F54;
@@ -37,17 +61,16 @@ h4{
 	color:#373947;
 	border-radius: 25px;
 	letter-spacing: 5px;
-	margin:10%;
+	margin:20%;
 }
 #start:hover{
 	background-color: #FFB085;
 	cursor: pointer;
 	color:#BA4F54;
-	margin:10%;
 }
 #menu_bar{
 	background-color: #BA4F54;
-	width:380px;
+	width:392px;
 	padding: 0.5%;
 	margin:0.5%;
 	margin-bottom: 0;
@@ -70,9 +93,9 @@ h4{
 }
 #board{
 	background: #F8DCAD;
-	width:375px;
-	height:500px;
+	width:389px;
+	height:563px;
 	position:relative;
 	display: block;
-	margin: 0 1.2%;
+	margin: 0 1.5%;
 }
