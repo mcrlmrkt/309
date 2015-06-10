@@ -99,3 +99,18 @@ h4{
 	display: block;
 	margin: 0 1.5%;
 }
+.food{
+	position: absolute;
+}
+#banana{
+	left:100px;
+	top:500px;
+}
+#apple{
+	right:300px;
+	top:200px;
+}
+#cupcake{
+	right:30px;
+	top:100px;
+}
