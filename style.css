@@ -45,6 +45,9 @@ h4{
 #level1, #level2{
 	width: 15%;
 }
+#level1:hover, #level2:hover{
+    cursor: pointer;
+}
 #hs{
 	width:75%;
 }
