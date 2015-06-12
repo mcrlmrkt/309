@@ -2,9 +2,12 @@ html{
 	width:400px;
 	height:600px;
 }
-html, body, h1, h2, h3, h4, h5, h6{
+html, body, h1, h2, h3, h4, h5, h6, canvas{
 	margin:0;
 	padding:0;
+}
+canvas{
+	position: absolute;
 }
 body{
 	background: #00BA9F;
@@ -98,23 +101,4 @@ h4{
 	position:relative;
 	display: block;
 	margin: 0 1.5%;
-}
-.food{
-	position: absolute;
-}
-#banana{
-	left:100px;
-	bottom:200px;
-}
-#apple{
-	right:200px;
-	top:200px;
-}
-#cupcake{
-	right:30px;
-	top:100px;
-}
-#burger{
-	bottom:80px;
-	right:70px;
 }

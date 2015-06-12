@@ -15,13 +15,43 @@
 </header>
 <body>
 	<div id="board">
-		<img src="banana.png" id="banana" class="food" width="13%">
-		<img src="cupcake.png" id="cupcake" class="food" width="10%">
-		<img src="apple.png" id="apple" class="food" width="10%">
-		<img src="burger.png" id="burger" class="food" width="15%">
-		<img src="ladybug.png" width="8%">
-		<img src="ant.png" width="8%">
-		<img src="bee.png" width="8%">
+		<canvas id="banana" width="100" height="100"></canvas>
+		<canvas id="cupcake" width="100" height="100"></canvas>
+		<canvas id="apple" width="100" height="100"></canvas>
+		<canvas id="burger" width="100" height="100"></canvas>
+		<canvas id="ladybug" width="100" height="100"></canvas>
+		<canvas id="ant" width="100" height="100"></canvas>
+		<canvas id="bee" width="100" height="100"></canvas>
+
+		<script type="text/javascript">
+			<!--Create an array of food to be placed randomly in the screen-->
+			var banana = new Image();
+			var cupcake = new Image();
+			var apple = new Image();
+			var burger = new Image();
+			var food_img = [banana, cupcake, apple, burger]; //array of food
+			var food = ['banana', 'cupcake', 'apple', 'burger'];
+
+			for (var i=0; i < 4; i++){
+				var canvas = document.getElementById(food[i]);
+				var context = canvas.getContext("2d"); 
+				food_img[i].src= food[i] + ".png";
+				context.drawImage(food_img[i], 20 ,20, 20, 20); 
+			}
+			<!--Create an array of bugs which can enter the screen at random order-->
+			var ladybug = new Image();
+			var ant = new Image();
+			var bee = new Image();
+			var bugs = [ladybug, ant, bee];
+			var bug = ['ladybug', 'ant', 'bee'];
+
+			for (var i=0; i < 4; i++){
+				var canvas = document.getElementById(bug[i]);
+				var context = canvas.getContext("2d"); 
+				bugs[i].src= bug[i] + ".png";
+				context.drawImage(bugs[i],20,0, 20, 20); 
+			}
+		</script>
 	</div>
 </body>
 </html>
