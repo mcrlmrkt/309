@@ -1,3 +1,4 @@
+
 <!--Create an array of food to be placed randomly in the screen-->
 			var banana = new Image();
 			var cupcake = new Image();
@@ -25,3 +26,34 @@
 				bugs[i].src= bug[i] + ".png";
 				context.drawImage(bugs[i],20,0, 20, 20); 
 			}
+
+// if level one is selected is_1=1
+var is_1 = 0;
+// if level two is selected is_2=2
+var is_2 = 0;
+
+function clicked_1() {
+    is_1 = is_1+1;
+    var level = document.getElementById("level1");
+    level.style.color = "#fff1a9";
+    is_2 = 0;
+    unclicked_2();
+}
+
+function unclicked_1() {
+    var level = document.getElementById("level1");
+    level.style.color = "#373947";
+}
+
+function clicked_2() {
+    is_2 = is_2+1;
+    var level = document.getElementById("level2");
+    level.style.color = "#fff1a9";
+    is_1 = 0;
+    unclicked_1();
+}
+
+function unclicked_2() {
+    var level = document.getElementById("level2");
+    level.style.color = "#373947";
+}
