@@ -4,18 +4,18 @@
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<link href="http://fonts.googleapis.com/css?family=Advent+Pro:400,100" rel="stylesheet" type="text/css">
 	<link href="http://fonts.googleapis.com/css?family=Aldrich" rel="stylesheet" type="text/css">
-    <script src="game.js"></script>
+	<script type="text/javascript" src="game.js" async></script>
 	<title>Tap Tap Bug</title>
 </head>
 <header>
-	<div id="menu_bar">
-		<span id="timer"><h6>S</h6></span>
+	<div id="menu_bar" onload="timer()">
+		<span id="timer"><h6>60</h6></span>
 		<span id="pause"><h6>PAUSE</h6></span>
 		<span id="score"><h6>SCORE:</h6></span>
 	</div>
 </header>
 <body onload="load_images()">
-	<div id="board">
+	<div id="board" onload="enter_bugs()">
 		<canvas id="banana" width="388px" height="563px"></canvas>
 		<canvas id="cupcake" width="388px" height="563px"></canvas>
 		<canvas id="apple" width="388px" height="563px"></canvas>

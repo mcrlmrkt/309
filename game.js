@@ -1,3 +1,9 @@
+var ladybug = new Image();
+var ant = new Image();
+var bee = new Image();
+var bugs = [ladybug, ant, bee];
+var time = 60;
+
 function load_images() {
 	//Create an array of food to be placed randomly in the screen
 	var banana = new Image();
@@ -11,21 +17,31 @@ function load_images() {
 		var canvas = document.getElementById(food[i]);
 		var context = canvas.getContext("2d"); 
 		foods[i].src= food[i] + ".png";
-		context.drawImage(foods[i], (Math.floor((Math.random() * 375))+1) , (Math.floor((Math.random() * 565))+1), 20, 20); 
+		context.drawImage(foods[i], (Math.floor((Math.random() * 370))+1), 
+			(Math.floor((Math.random() * 540))+1), 
+			20, 20); 
 	}
 	//Create an array of bugs which can enter the screen at random order
-	var ladybug = new Image();
-	var ant = new Image();
-	var bee = new Image();
-	var bugs = [ladybug, ant, bee];
 	var bug = ['ladybug', 'ant', 'bee'];
 
 	for (var i=0; i < 4; i++){
 		var canvas = document.getElementById(bug[i]);
 		var context = canvas.getContext("2d"); 
 		bugs[i].src= bug[i] + ".png";
-		//context.drawImage(bugs[i],0,0, 20, 20); 
+		// 
 	}
+}
+
+function timer() {
+    var timer = setInterval(function() {
+    document.getElementById("timer").innerHTML(time--);
+    if(time == 1) clearInterval(timer);
+	}, 1000).toString();
+}
+
+function enter_bugs() {
+	var random = bugs[Math.floor((Math.random() * 3))];
+	setInterval(function () {context.drawImage(bugs[0],0,0, 20, 20)}, 3000);
 }
 
 // if level one is selected is_1=1
