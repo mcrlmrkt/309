@@ -11,7 +11,7 @@ function load_images() {
 		var canvas = document.getElementById(food[i]);
 		var context = canvas.getContext("2d"); 
 		foods[i].src= food[i] + ".png";
-		context.drawImage(foods[i], 20 ,20, 20, 20); 
+		context.drawImage(foods[i], (Math.floor((Math.random() * 375))+1) , (Math.floor((Math.random() * 565))+1), 20, 20); 
 	}
 	//Create an array of bugs which can enter the screen at random order
 	var ladybug = new Image();
@@ -24,10 +24,9 @@ function load_images() {
 		var canvas = document.getElementById(bug[i]);
 		var context = canvas.getContext("2d"); 
 		bugs[i].src= bug[i] + ".png";
-		context.drawImage(bugs[i],20,0, 20, 20); 
+		//context.drawImage(bugs[i],0,0, 20, 20); 
 	}
 }
-
 
 // if level one is selected is_1=1
 var is_1 = 0;

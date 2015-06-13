@@ -8,6 +8,8 @@ html, body, h1, h2, h3, h4, h5, h6, canvas{
 }
 canvas{
 	position: absolute;
+	left:0;
+	top:0;
 }
 body{
 	background: #00BA9F;
