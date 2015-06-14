@@ -3,6 +3,8 @@ var ant = new Image();
 var bee = new Image();
 var bugs = [ladybug, ant, bee];
 var time = 60;
+var hs_1 = 0; // level 1 high score
+var hs_2 = 0; // level 2 high score
 
 // Game Page
 
@@ -63,6 +65,7 @@ function clicked_1() {
     this.style.color = "#fff1a9";
     is_2 = 0;
     unclicked_2();
+    display_hs();
 }
 
 function unclicked_1() {
@@ -75,10 +78,23 @@ function clicked_2() {
     this.style.color = "#fff1a9";
     is_1 = 0;
     unclicked_1();
+    display_hs();
 }
 
 function unclicked_2() {
     var level = document.getElementById("level2");
     level.style.color = "#373947";
+}
+
+function display_hs() {
+    var hs = document.getElementById("high_score");
+    if (is_1 == 1) {
+        hs.style.fontSize = "30px";
+        hs.innerHTML = hs_1;
+    }
+    else if (is_2 == 1) {
+        hs.style.fontSize = "30px";
+        hs.innerHTML = hs_2;
+    }
 }
 
