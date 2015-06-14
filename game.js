@@ -53,8 +53,6 @@ function enter_bugs() {
 var is_1 = 0; // if level one is selected is_1=1
 var is_2 = 0; // if level two is selected is_2=1
 
-window.onload = pageLoad;
-
 function pageLoad() {
     document.getElementById("level1").onclick = clicked_1;
     document.getElementById("level2").onclick = clicked_2;
@@ -97,4 +95,5 @@ function display_hs() {
         hs.innerHTML = hs_2;
     }
 }
+
 
