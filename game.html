@@ -9,17 +9,41 @@
 </head>
 <header>
 	<div id="menu_bar" onload="timer()">
-		<span id="timer"><h6>60</h6></span>
-		<span id="pause"><h6>PAUSE</h6></span>
+		<span id="timer">60sec</span>
+		<button id="pause_button" onclick="pause_game()">PAUSE</button>
 		<span id="score"><h6>SCORE:</h6></span>
 	</div>
 </header>
-<body onload="gameLoad()">
-	<div id="board">
-		<canvas id="banana" width="388px" height="563px"></canvas>
-		<canvas id="cupcake" width="388px" height="563px"></canvas>
-		<canvas id="apple" width="388px" height="563px"></canvas>
-		<canvas id="burger" width="388px" height="563px"></canvas>
+<body>
+	<div id="home_page">
+		<h1>TAPTAPBUG</h1>
+		<span id="level"><h4>LEVEL</h4></span>
+		<span id="level1" onclick="clicked_1()"><h4>1</h4></span>
+		<span id="level2" onclick="clicked_2()"><h4>2</h4></span>
+		<center>
+			<button id="start" onclick="start()">START</button>
+		</center>
+		<span id="hs"><h4>HIGH SCORE:</h4></span>
+		<span id="high_score"><h4>0</h4></span>
+	</div>
+
+	<div id="game">
+		<div id="lose" class="popup"><h1>YOU LOSE</h1></div>
+		<div id="win" class="popup"><h1>YOU WIN</h1></div>
+		<div id="paused" class="popup">
+			<button id="resume_button" onclick="resume_game()">
+				<h4>CLICK TO CONTINUE</h4>
+			</button>
+		</div>
+		<div id="board" onload="enter_bugs()">
+			<canvas id="banana" width="388px" height="563px"></canvas>
+			<canvas id="cupcake" width="388px" height="563px"></canvas>
+			<canvas id="apple" width="388px" height="563px"></canvas>
+			<canvas id="burger" width="388px" height="563px"></canvas>
+			<canvas id="ladybug" width="388px" height="563px"></canvas>
+			<canvas id="ant" width="100%" height="100%"></canvas>
+			<canvas id="bee" width="100%" height="100%"></canvas>
+		</div>
 	</div>
 </body>
 </html>

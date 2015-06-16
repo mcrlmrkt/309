@@ -1,31 +1,11 @@
-// Game page variable
-var time = 60;
-
-var canvas; // for load_foods
-var context;
-var j=0;
-
-var int;
-
-var bugs_img = []; // for load_bugs
-var num_bugs = 0; //number of bugs added
-
-//Level 1 variables
-var is_1 = 0; // if level one is selected is_1=1
-var hs_1 = 0; // level 1 high score
-var curr_hs_1 = 0;
-
-//Level 2 variable
-var is_2 = 0; // if level two is selected is_2=1
-var hs_2 = 0; // level 2 high score
-var curr_hs_2 = 0;
-
-// Game Page
-
-function gameLoad() {
-    load_foods();
-    load_bugs();
-}
+var ladybug = new Image(),
+    ant = new Image(),
+    bee = new Image(),
+    bugs = [ladybug, ant, bee],
+    time = 60,
+    score = 0,
+    interval,
+    win = fault;
 
 function load_foods() {
     //Create an array of food to be placed randomly in the screen
@@ -33,8 +13,9 @@ function load_foods() {
     var cupcake = new Image();
     var apple = new Image();
     var burger = new Image();
-    var foods = [banana, cupcake, apple, burger]; //array of food
-    var food = ['banana', 'cupcake', 'apple', 'burger'];
+    var donut = new Image();
+    var foods = [banana, cupcake, apple, burger, donut]; //array of food
+    var food = ['banana', 'cupcake', 'apple', 'burger', 'donut'];
     
     for (var i=0; i < 4; i++){
         canvas = document.getElementById(food[i]);
@@ -43,7 +24,7 @@ function load_foods() {
         foods[i].onload = function() {
 
             if (j < 4) {
-                foods = [banana, cupcake, apple, burger]; //array of food
+                foods = [banana, cupcake, apple, burger, donut]; //array of food
                 context = canvas.getContext("2d");
                 context.drawImage(foods[j], (Math.floor((Math.random() * 370))+1),
                                   (Math.floor((Math.random() * 540))+1),
@@ -55,10 +36,39 @@ function load_foods() {
 }
 
 function timer() {
-    var timer = setInterval(function() {
-    document.getElementById("timer").innerHTML(time--);
-    if(time == 1) clearInterval(timer);
-    }, 1000).toString();
+    var display = document.querySelector('#timer'),
+        countdown = document.getElementById("timer");
+    interval = setInterval(function(){
+        if (time == 0){
+            if (win == true){
+                document.getElementById("win").style.display = "block";
+            } else {
+                 document.getElementById("lose").style.display = "block";
+            }
+        } else {
+            time--;
+            display.textContent = time + 'sec';
+        }
+    }, 1000);
+}
+
+function start() {
+    document.getElementById("home_page").style.display = "none";
+    document.getElementById("game").style.display = "block";
+    document.getElementById("menu_bar").style.display = "block";
+    timer();
+    load_foods();
+    load_bugs();
+}
+
+function pause_game() {
+    clearTimeout(interval);
+    document.getElementById("paused").style.display = "block";
+}
+
+function resume_game(){
+    timer();
+    document.getElementById("paused").style.display = "none";
 }
 
 function load_bugs() {
@@ -91,73 +101,34 @@ function enter_bugs() {
 
 }
 
-// Index Page
-
-function pageLoad() {
-    document.getElementById("level1").onclick = clicked_1;
-    document.getElementById("level2").onclick = clicked_2;
-}
+// if level one is selected is_1=1
+var is_1 = 0;
+// if level two is selected is_2=2
+var is_2 = 0;
 
 function clicked_1() {
-    console.log("in clicked_1");
     is_1 = is_1+1;
-    console.log(is_1);
-    this.style.color = "#fff1a9";
+    var level = document.getElementById("level1");
+    level.style.color = "#fff1a9";
     is_2 = 0;
     unclicked_2();
-    display_hs();
 }
 
 function unclicked_1() {
-    console.log("in unclicked_1");
     var level = document.getElementById("level1");
     level.style.color = "#373947";
 }
 
 function clicked_2() {
-    console.log("in clicked_2");
     is_2 = is_2+1;
-    console.log(is_2);
-    this.style.color = "#fff1a9";
+    var level = document.getElementById("level2");
+    level.style.color = "#fff1a9";
     is_1 = 0;
     unclicked_1();
-    display_hs();
 }
 
 function unclicked_2() {
-    console.log("in unclicked_2");
     var level = document.getElementById("level2");
     level.style.color = "#373947";
 }
 
-function display_hs() {
-    console.log("in display hs");
-    console.log(is_1);
-    console.log(is_2);
-    var hs = document.getElementById("high_score");
-    if (is_1 == 1) {
-        console.log("in display hs1");
-        hs.style.fontSize = "30px";
-        hs.innerHTML = hs_1;
-    }
-    else if (is_2 == 1) {
-        console.log("in display hs2");
-        hs.style.fontSize = "30px";
-        hs.innerHTML = hs_2;
-    }
-}
-
-// updating the high score
-function update_hs_1() {
-    if (hs_1 <= curr_hs_1) {
-        hs_1 = curr_hs_1;
-    }
-    curr_hs_1 = 0; //reset
-}
-
-function update_hs_2() {
-    if (hs_2 <= curr_hs_2) {
-        hs_2 = curr_hs_2;
-    }
-    curr_hs_2 = 0; //reset
-}

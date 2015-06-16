@@ -26,24 +26,26 @@ h1{
 h4{
 	font-size: 30px;
 }
-#home{
-	margin-top: 50px;
-	margin-bottom: 50px;
-}
-#main span{
+#home_page span{
 	text-align: center;
 	display: inline-block;
 }
-#main{
-	position: relative;
+#home_page{
+	padding: 5%;
+	position: absolute;
 	left:0;
 	right:0;
 	margin:auto;
 	text-align: left;
 	width:400px;
+	height: 600px;
+	text-align: center;
+	z-index: 5;
+	border:1px solid block;
+	background: #00BA9F; 
 }
 #level{
-	width: 55%;
+	width: 47%;
 	color:#fff1a9;
 	text-align: center;
 }
@@ -54,7 +56,7 @@ h4{
     cursor: pointer;
 }
 #hs{
-	width:75%;
+	width:70%;
 }
 #high_score{
 	width:15%;
@@ -62,14 +64,14 @@ h4{
 }
 #start{
 	margin:0;
-	padding:20px;
+	padding:15px;
 	border:none;
 	background-color: #BA4F54;
 	font-size:40px;
 	color:#373947;
 	border-radius: 25px;
 	letter-spacing: 5px;
-	margin:20%;
+	margin:15%;
 }
 #start:hover{
 	background-color: #FFB085;
@@ -84,7 +86,7 @@ h4{
 	margin-bottom: 0;
 	position: relative;
 	overflow: scroll;
-	display: block;
+	display: none;
 	font-size: 30px;
 }
 #menu_bar span{
@@ -94,6 +96,8 @@ h4{
 	display: inline-block;
 }
 #timer{
+	font-size: 25px;
+	padding: 1%;
 	text-align: left;
 }
 #score{
@@ -106,4 +110,35 @@ h4{
 	position:relative;
 	display: block;
 	margin: 0 1.5%;
+}
+#game{
+	display: none;
+}
+.popup{
+	top:40%;
+	white-space: nowrap;
+	position: absolute;
+	display: none;
+	padding: 2%;
+	z-index: 2;
+	width:380px;
+}
+#lose{
+	background: #A68797;
+}
+#win {
+	background: #FCBEC3;
+}
+#paused{
+	background: #FFE400;
+}
+button{
+	background: none;
+	border: none;
+	cursor: pointer;
+	font-size: 25px;
+	padding: 1%;
+	color:#373947;
+	font-family: 'Aldrich', sans-serif;
+	font-weight: 100;
 }
