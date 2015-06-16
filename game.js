@@ -47,7 +47,7 @@ function load_foods() {
                 context = canvas.getContext("2d");
                 console.log("context is "+context);
                 context.drawImage(foods[j], (Math.floor((Math.random() * 370))+1),
-                                  (Math.floor((Math.random() * 540))+1),
+                                  (Math.floor((Math.random() * 540)) + 1),
                                   20, 20);
                 j++;
             }
@@ -83,7 +83,7 @@ function start() {
         load_bugs();
     }
     else {
-        //display message to pick a level
+        document.getElementById("pick_level").style.display = "block";
     }
 }
 
@@ -121,7 +121,7 @@ function enter_bugs() {
     //canvas.style.height = "563px";
     //canvas.style.width = "388px";
     var context = canvas.getContext("2d");
-    context.drawImage(img, (Math.floor((Math.random() * 380))+10),20, 10, 40);
+    context.drawImage(img, (Math.floor((Math.random() * 380))+10),40, 20, 20);
     console.log("drawImage "+canvas+" "+context);
     document.body.appendChild(canvas);  
 }

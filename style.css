@@ -88,6 +88,7 @@ h4{
 	overflow: scroll;
 	display: none;
 	font-size: 30px;
+	z-index: 100;
 }
 #menu_bar span{
 	width:30%;
@@ -140,4 +141,8 @@ button{
 	color:#373947;
 	font-family: 'Aldrich', sans-serif;
 	font-weight: 100;
+}
+#pick_level{
+	background: #FFDBCC;
+	top:150px;
 }
