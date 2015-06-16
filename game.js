@@ -1,14 +1,28 @@
-var ladybug = new Image(),
-    ant = new Image(),
-    bee = new Image(),
-    bugs = [ladybug, ant, bee],
-    time = 60,
+var time = 60,
     score = 0,
     interval,
-    win = fault;
+    win = 0;
+
+var canvas,
+    context,
+    j=0; //for load_foods
+
+var int;
+
+var bugs_img = []; // for load_bugs
+var num_bugs = 0; //number of bugs added
+
+//Level 1 variables
+var is_1 = 0; // if level one is selected is_1=1
+var hs_1 = 0; // level 1 high score
+
+//Level 2 variable
+var is_2 = 0; // if level two is selected is_2=1
+var hs_2 = 0; // level 2 high score
 
 function load_foods() {
     //Create an array of food to be placed randomly in the screen
+    console.log("in load foods");
     var banana = new Image();
     var cupcake = new Image();
     var apple = new Image();
@@ -17,15 +31,21 @@ function load_foods() {
     var foods = [banana, cupcake, apple, burger, donut]; //array of food
     var food = ['banana', 'cupcake', 'apple', 'burger', 'donut'];
     
-    for (var i=0; i < 4; i++){
-        canvas = document.getElementById(food[i]);
+    for (var i=0; i < 5; i++){
+        console.log("i is "+ i);
+        console.log("foods i is "+food[i]);
         foods[i].src= food[i] + ".png";
         
         foods[i].onload = function() {
 
-            if (j < 4) {
+            if (j < 5) {
+                console.log("j is "+j);
                 foods = [banana, cupcake, apple, burger, donut]; //array of food
+                food = ['banana', 'cupcake', 'apple', 'burger', 'donut'];
+                canvas = document.getElementById(food[j]);
+                console.log("canvas is "+canvas);
                 context = canvas.getContext("2d");
+                console.log("context is "+context);
                 context.drawImage(foods[j], (Math.floor((Math.random() * 370))+1),
                                   (Math.floor((Math.random() * 540))+1),
                                   20, 20);
@@ -53,12 +73,18 @@ function timer() {
 }
 
 function start() {
-    document.getElementById("home_page").style.display = "none";
-    document.getElementById("game").style.display = "block";
-    document.getElementById("menu_bar").style.display = "block";
-    timer();
-    load_foods();
-    load_bugs();
+    //check if a level is selected
+    if (is_1 == 1 || is_2 == 1) {
+        document.getElementById("home_page").style.display = "none";
+        document.getElementById("game").style.display = "block";
+        document.getElementById("menu_bar").style.display = "block";
+        timer();
+        load_foods();
+        load_bugs();
+    }
+    else {
+        //display message to pick a level
+    }
 }
 
 function pause_game() {
@@ -95,16 +121,11 @@ function enter_bugs() {
     //canvas.style.height = "563px";
     //canvas.style.width = "388px";
     var context = canvas.getContext("2d");
-    context.drawImage(img, (Math.floor((Math.random() * 380))+10),10, 10, 40);
+    context.drawImage(img, (Math.floor((Math.random() * 380))+10),20, 10, 40);
     console.log("drawImage "+canvas+" "+context);
     document.body.appendChild(canvas);
-
+    
 }
-
-// if level one is selected is_1=1
-var is_1 = 0;
-// if level two is selected is_2=2
-var is_2 = 0;
 
 function clicked_1() {
     is_1 = is_1+1;
@@ -112,6 +133,7 @@ function clicked_1() {
     level.style.color = "#fff1a9";
     is_2 = 0;
     unclicked_2();
+    display_hs();
 }
 
 function unclicked_1() {
@@ -125,6 +147,7 @@ function clicked_2() {
     level.style.color = "#fff1a9";
     is_1 = 0;
     unclicked_1();
+    display_hs();
 }
 
 function unclicked_2() {
@@ -132,3 +155,19 @@ function unclicked_2() {
     level.style.color = "#373947";
 }
 
+function display_hs() {
+    console.log("in display hs");
+    console.log(is_1);
+    console.log(is_2);
+    var hs = document.getElementById("high_score");
+    if (is_1 == 1) {
+        console.log("in display hs1");
+        hs.style.fontSize = "30px";
+        hs.innerHTML = hs_1;
+    }
+    else if (is_2 == 1) {
+        console.log("in display hs2");
+        hs.style.fontSize = "30px";
+        hs.innerHTML = hs_2;
+    }
+}
