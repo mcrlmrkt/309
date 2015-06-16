@@ -1,7 +1,7 @@
 var time = 60,
     score = 0,
     interval,
-    win = 0;
+    win = false;
 
 var canvas,
     context,
