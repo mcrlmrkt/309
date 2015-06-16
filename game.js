@@ -123,8 +123,7 @@ function enter_bugs() {
     var context = canvas.getContext("2d");
     context.drawImage(img, (Math.floor((Math.random() * 380))+10),20, 10, 40);
     console.log("drawImage "+canvas+" "+context);
-    document.body.appendChild(canvas);
-    
+    document.body.appendChild(canvas);  
 }
 
 function clicked_1() {
