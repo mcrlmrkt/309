@@ -127,7 +127,6 @@ function enter_bugs() {
     canvas.style.position = "absolute";
     canvas.style.width = "389px";
     var context = canvas.getContext("2d");
-    context.strokeStyle = 'black';
     
     if (bugs[i].complete) { //image loaded
         context.drawImage(bugs[i], x, 40, 20, 20);
