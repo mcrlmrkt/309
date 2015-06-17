@@ -54,20 +54,17 @@ function enter_foods(i) {
     }
 }
 
-
-
 function timer() {
-    var display = document.querySelector('#timer'),
-        countdown = document.getElementById("timer");
+    var display = document.querySelector('#timer');
     interval = setInterval(function(){
         if (time == 0){
-            clearTimeout(int);
+            clearInterval(int);
+            check_win();
             if (win == true){
                 document.getElementById("win").style.display = "block";
             } else {
                  document.getElementById("lose").style.display = "block";
             }
-                           clearInterval(int);
         } else {
             time--;
             display.textContent = time + 'sec';
@@ -163,6 +160,14 @@ function move_bug() {
     }
 }
 
+function check_win(){
+    var num_foods = foods_id.length;
+    if (num_foods == 0){
+        win = false;
+    } else {
+        win = true;
+    }
+}
 
 function closest_food(bug_position) {
     console.log("in closest food");
