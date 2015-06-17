@@ -61,6 +61,7 @@ function timer() {
         countdown = document.getElementById("timer");
     interval = setInterval(function(){
         if (time == 0){
+            clearTimeout(int);
             if (win == true){
                 document.getElementById("win").style.display = "block";
             } else {
@@ -222,6 +223,9 @@ function min_distance_id() {
         }
         return foods_id[curr];
     }
+    context.drawImage(img, (Math.floor((Math.random() * 370))+1),40, 20, 20);
+    console.log("drawImage "+canvas+" "+context);
+    document.body.appendChild(canvas);  
 }
 
 function clicked_1() {
