@@ -6,11 +6,16 @@ var time = 60,
 var canvas,
     context,
     j=0; //for load_foods
+var food = ['banana', 'cupcake', 'apple', 'burger', 'donut'];
 
 var int;
 
 var bugs_img = []; // for load_bugs
+var bugs_id = []; // remove id if bug dies
 var num_bugs = 0; //number of bugs added
+
+var food_distance = []; //all food available on the board distances wrt a bug
+var foods_id = []; //remove id if food eaten
 
 //Level 1 variables
 var is_1 = 0; // if level one is selected is_1=1
@@ -21,39 +26,35 @@ var is_2 = 0; // if level two is selected is_2=1
 var hs_2 = 0; // level 2 high score
 
 function load_foods() {
-    //Create an array of food to be placed randomly in the screen
-    console.log("in load foods");
-    var banana = new Image();
-    var cupcake = new Image();
-    var apple = new Image();
-    var burger = new Image();
-    var donut = new Image();
-    var foods = [banana, cupcake, apple, burger, donut]; //array of food
-    var food = ['banana', 'cupcake', 'apple', 'burger', 'donut'];
-    
-    for (var i=0; i < 5; i++){
-        console.log("i is "+ i);
-        console.log("foods i is "+food[i]);
-        foods[i].src= food[i] + ".png";
-        
-        foods[i].onload = function() {
-
-            if (j < 5) {
-                console.log("j is "+j);
-                foods = [banana, cupcake, apple, burger, donut]; //array of food
-                food = ['banana', 'cupcake', 'apple', 'burger', 'donut'];
-                canvas = document.getElementById(food[j]);
-                console.log("canvas is "+canvas);
-                context = canvas.getContext("2d");
-                console.log("context is "+context);
-                context.drawImage(foods[j], (Math.floor((Math.random() * 370))+1),
-                                  (Math.floor((Math.random() * 540)) + 1),
-                                  20, 20);
-                j++;
-            }
-        };
+    for (var i =0; i<5; i++) {
+        enter_foods(i);
     }
 }
+
+var num_foods=0;
+function enter_foods(i) {
+    var banana, cupcake, apple, burger, donut;
+    var foods = [banana, cupcake, apple, burger, donut]; //array of food
+    var food = ['banana', 'cupcake', 'apple', 'burger', 'donut'];
+    var y = (Math.floor((Math.random() * 540)) + 1);
+    var x = (Math.floor((Math.random() * 260))+10);
+    foods[i] = new Image();
+    foods_id.push(foods[i]);
+    foods[i].src = food[i] + ".png";
+    var canvas = document.getElementById(food[i]);
+    num_foods++;
+    var context = canvas.getContext("2d");
+    context.strokeStyle = 'black';
+    
+    foods[i].onload = function() {
+        console.log("i is "+i);
+        console.log("x is "+x+" y is "+y);
+        context.drawImage(foods[i], x, y, 20, 20);
+        
+    }
+}
+
+
 
 function timer() {
     var display = document.querySelector('#timer'),
@@ -88,7 +89,6 @@ function start() {
         var pick_level = setTimeout(function(){
                                     document.getElementById("pick_level").style.display = "none";
                                     }, 2000);
-                                    
     }
 }
 
@@ -111,51 +111,121 @@ function load_bugs() {
 }
 
 function enter_bugs() {
-    var ladybug;
-    var ant;
-    var bee;
-    bugs = [ladybug, ant, bee]; //array of bug
-    bug = ['ladybug', 'ant', 'bee'];
+    var ladybug, ant, bee;
     var i = parseInt(Math.random() * 3); //random integer
     var x = (Math.floor((Math.random() * 260))+10);
-    console.log("x is "+x);
-    console.log("i is "+i);
+    bugs = [ladybug, ant, bee]; //array of bug
+    bug = ['ladybug', 'ant', 'bee'];
+    
     bugs[i] = new Image();
     bugs_img.push(bugs[i]);
-    console.log("bugs img is "+bugs_img[num_bugs]);
     bugs[i].src = bug[i] + ".png";
-    console.log("bug i is "+bug[i]);
     var canvas = document.createElement('canvas');
     canvas.setAttribute('id', num_bugs);
-    console.log("num_bugs is "+num_bugs);
+    bugs_id.push(num_bugs);
     num_bugs++;
     canvas.style.position = "absolute";
-    //canvas.style.height = "600px";
     canvas.style.width = "389px";
     var context = canvas.getContext("2d");
+    context.strokeStyle = 'black';
     
     if (bugs[i].complete) { //image loaded
-        console.log("in complete bugs i is "+bugs[i]);
-        console.log("x is "+x);
         context.drawImage(bugs[i], x, 40, 20, 20);
         document.body.appendChild(canvas);
         clearInterval(int);
+        move_bug();
         load_bugs();
     }
     else {
         bugs[i].onload = function() {
-            console.log("in onload bugs i is "+bugs[i]);
-            console.log("x is "+x);
             context.drawImage(bugs[i], x, 40, 20, 20);
             document.body.appendChild(canvas);
             clearInterval(int);
+            move_bug();
             load_bugs();
         }
     }
 }
 
+function move_bug() {
+    console.log("in move_bug");
+    for (var b=0; b<bugs_id.length; b++) {
+        console.log("there are "+bugs_id[b]);
+        var bug_elt = document.getElementById(bugs_id[b]);
+        var bug_position = position(bug_elt);
+        console.log("bug "+b +"is at x= "+bug_position.x+" y="+bug_position.y);
+        var closest_id = closest_food(bug_position); //id of the closest food
+        
+        food_distance = []; //clear food distance array
+        
+        // TODO
+        // move to the food determined by closest_id
+    }
+}
+
+
+function closest_food(bug_position) {
+    console.log("in closest food");
+    for (var f=0; f<foods_id.length; f++) {
+        console.log("food length is  "+foods_id.length);
+        var food_elt = document.getElementById(food[f]);
+        var food_position = position(food_elt); //get position for each food
+        console.log("food is at x= "+food_position.x+" y="+food_position.y);
+        // calculate the distance between bug and food
+        food_distance.push(calculate_distance(bug_position, food_position));
+        
+        // TODO
+        //if both position are the same, then remove food from food_id
+        //decrease total num of food.
+    }
+    
+    return min_distance_id(food_distance);
+    
+}
+
+// TODO fix this function
+function position(elt) {
+    console.log("in position");
+    var x = 0;
+    var y = 0;
+    
+    while (elt) {
+        x += (elt.clientLeft + elt.offsetLeft - elt.scrollLeft);
+        y += (elt.clientTop + elt.offsetTop - elt.scrollTop);
+        console.log("to and bottom are "+x+" "+y);
+        elt = elt.offsetParent;
+    }
+    return { x: x, y: y};
+}
+
+function calculate_distance(bug_position, food_position) {
+    var x1 = bug_position.x;
+    var y1 = bug_position.y;
+    var x2 = food_position.x;
+    var y2 = food_position.y;
+    
+    var distance = Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2));
+    console.log("distance is "+distance);
+    return distance;
+}
+
+function min_distance_id() {
+    if (food_distance.length == 1) {
+        return foods_id[0];
+    }
+    
+    else {
+        var curr = 0
+        for (var i=1; i<food_distance.length; i++) {
+            if (food_distance[curr] > food_distance[i]) {
+                curr = i;
+            }
+        }
+        return foods_id[curr];
+    }
+}
+
 function clicked_1() {
-    console.log("in click 1");
     is_1 = 1;
     var level = document.getElementById("level1");
     level.style.color = "#fff1a9";
@@ -165,13 +235,11 @@ function clicked_1() {
 }
 
 function unclicked_1() {
-    console.log("in unclick 1");
     var level = document.getElementById("level1");
     level.style.color = "#373947";
 }
 
 function clicked_2() {
-    console.log("in click 2");
     is_2 = 1;
     var level = document.getElementById("level2");
     level.style.color = "#fff1a9";
@@ -181,23 +249,18 @@ function clicked_2() {
 }
 
 function unclicked_2() {
-    console.log("in unclick 2");
+
     var level = document.getElementById("level2");
     level.style.color = "#373947";
 }
 
 function display_hs() {
-    console.log("in display hs");
-    console.log("1 is "+is_1);
-    console.log("2 is"+is_2);
     var hs = document.getElementById("high_score");
     if (is_1 == 1) {
-        console.log("in display hs1");
         hs.style.fontSize = "30px";
         hs.innerHTML = hs_1;
     }
     else if (is_2 == 1) {
-        console.log("in display hs2");
         hs.style.fontSize = "30px";
         hs.innerHTML = hs_2;
     }
