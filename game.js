@@ -65,6 +65,7 @@ function timer() {
             } else {
                  document.getElementById("lose").style.display = "block";
             }
+                           clearInterval(int);
         } else {
             time--;
             display.textContent = time + 'sec';
@@ -98,7 +99,9 @@ function resume_game(){
 }
 
 function load_bugs() {
-    int = setInterval(enter_bugs, 3000);
+    var random = ((parseInt(Math.random() * 2000)) + 1000);
+    console.log("random is "+random);
+    int = setInterval(enter_bugs, random);
 }
 
 function enter_bugs() {
@@ -108,22 +111,41 @@ function enter_bugs() {
     bugs = [ladybug, ant, bee]; //array of bug
     bug = ['ladybug', 'ant', 'bee'];
     var i = parseInt(Math.random() * 3); //random integer
+    var x = (Math.floor((Math.random() * 260))+10);
+    console.log("x is "+x);
     console.log("i is "+i);
-    img = new Image();
-    bugs_img.push(img);
+    bugs[i] = new Image();
+    bugs_img.push(bugs[i]);
     console.log("bugs img is "+bugs_img[num_bugs]);
-    img.src = bug[i] + ".png";
+    bugs[i].src = bug[i] + ".png";
     console.log("bug i is "+bug[i]);
     var canvas = document.createElement('canvas');
     canvas.setAttribute('id', num_bugs);
     console.log("num_bugs is "+num_bugs);
-    num_bugs = num_bugs + 1;
-    //canvas.style.height = "563px";
-    //canvas.style.width = "388px";
+    num_bugs++;
+    canvas.style.position = "absolute";
+    //canvas.style.height = "600px";
+    canvas.style.width = "389px";
     var context = canvas.getContext("2d");
-    context.drawImage(img, (Math.floor((Math.random() * 380))+10),20, 10, 40);
-    console.log("drawImage "+canvas+" "+context);
-    document.body.appendChild(canvas);  
+    
+    if (bugs[i].complete) { //image loaded
+        console.log("in complete bugs i is "+bugs[i]);
+        console.log("x is "+x);
+        context.drawImage(bugs[i], x, 20, 20, 20);
+        document.body.appendChild(canvas);
+        clearInterval(int);
+        load_bugs();
+    }
+    else {
+        bugs[i].onload = function() {
+            console.log("in onload bugs i is "+bugs[i]);
+            console.log("x is "+x);
+            context.drawImage(bugs[i], x, 20, 20, 20);
+            document.body.appendChild(canvas);
+            clearInterval(int);
+            load_bugs();
+        }
+    }
 }
 
 function clicked_1() {
