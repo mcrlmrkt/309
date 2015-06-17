@@ -85,6 +85,10 @@ function start() {
     }
     else {
         document.getElementById("pick_level").style.display = "block";
+        var pick_level = setTimeout(function(){
+                                    document.getElementById("pick_level").style.display = "none";
+                                    }, 2000);
+                                    
     }
 }
 
@@ -152,7 +156,7 @@ function enter_bugs() {
 
 function clicked_1() {
     console.log("in click 1");
-    is_1 = is_1+1;
+    is_1 = 1;
     var level = document.getElementById("level1");
     level.style.color = "#fff1a9";
     is_2 = 0;
@@ -168,7 +172,7 @@ function unclicked_1() {
 
 function clicked_2() {
     console.log("in click 2");
-    is_2 = is_2+1;
+    is_2 = 1;
     var level = document.getElementById("level2");
     level.style.color = "#fff1a9";
     is_1 = 0;
