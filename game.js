@@ -47,7 +47,7 @@ function load_foods() {
                 context = canvas.getContext("2d");
                 console.log("context is "+context);
                 context.drawImage(foods[j], (Math.floor((Math.random() * 370))+1),
-                                  (Math.floor((Math.random() * 540))+1),
+                                  (Math.floor((Math.random() * 540)) + 1),
                                   20, 20);
                 j++;
             }
@@ -84,17 +84,19 @@ function start() {
         load_bugs();
     }
     else {
-        //display message to pick a level
+        document.getElementById("pick_level").style.display = "block";
     }
 }
 
 function pause_game() {
     clearTimeout(interval);
+    clearInterval(int);
     document.getElementById("paused").style.display = "block";
 }
 
 function resume_game(){
     timer();
+    load_bugs();
     document.getElementById("paused").style.display = "none";
 }
 
@@ -131,7 +133,7 @@ function enter_bugs() {
     if (bugs[i].complete) { //image loaded
         console.log("in complete bugs i is "+bugs[i]);
         console.log("x is "+x);
-        context.drawImage(bugs[i], x, 20, 20, 20);
+        context.drawImage(bugs[i], x, 40, 20, 20);
         document.body.appendChild(canvas);
         clearInterval(int);
         load_bugs();
@@ -140,7 +142,7 @@ function enter_bugs() {
         bugs[i].onload = function() {
             console.log("in onload bugs i is "+bugs[i]);
             console.log("x is "+x);
-            context.drawImage(bugs[i], x, 20, 20, 20);
+            context.drawImage(bugs[i], x, 40, 20, 20);
             document.body.appendChild(canvas);
             clearInterval(int);
             load_bugs();
@@ -149,6 +151,7 @@ function enter_bugs() {
 }
 
 function clicked_1() {
+    console.log("in click 1");
     is_1 = is_1+1;
     var level = document.getElementById("level1");
     level.style.color = "#fff1a9";
@@ -158,11 +161,13 @@ function clicked_1() {
 }
 
 function unclicked_1() {
+    console.log("in unclick 1");
     var level = document.getElementById("level1");
     level.style.color = "#373947";
 }
 
 function clicked_2() {
+    console.log("in click 2");
     is_2 = is_2+1;
     var level = document.getElementById("level2");
     level.style.color = "#fff1a9";
@@ -172,14 +177,15 @@ function clicked_2() {
 }
 
 function unclicked_2() {
+    console.log("in unclick 2");
     var level = document.getElementById("level2");
     level.style.color = "#373947";
 }
 
 function display_hs() {
     console.log("in display hs");
-    console.log(is_1);
-    console.log(is_2);
+    console.log("1 is "+is_1);
+    console.log("2 is"+is_2);
     var hs = document.getElementById("high_score");
     if (is_1 == 1) {
         console.log("in display hs1");
