@@ -36,21 +36,21 @@ function enter_foods(i) {
     var banana, cupcake, apple, burger, donut;
     var foods = [banana, cupcake, apple, burger, donut]; //array of food
     var food = ['banana', 'cupcake', 'apple', 'burger', 'donut'];
-    var y = (Math.floor((Math.random() * 540)) + 1);
+    var y = (Math.floor((Math.random() * 540)) + 10);
     var x = (Math.floor((Math.random() * 260))+10);
     foods[i] = new Image();
-    foods_id.push(foods[i]);
+    foods_id[i]=foods[i];
     foods[i].src = food[i] + ".png";
     var canvas = document.getElementById(food[i]);
     num_foods++;
     var context = canvas.getContext("2d");
-    context.strokeStyle = 'black';
     
     foods[i].onload = function() {
-        console.log("i is "+i);
+        canvas.style.left = x+"px";
+        canvas.style.top = y+"px";
+        console.log("i is "+i+" food id "+food[i]);
         console.log("x is "+x+" y is "+y);
-        context.drawImage(foods[i], x, y, 20, 20);
-        
+        context.drawImage(foods[i], 0.5, 0.5, 20, 20);
     }
 }
 
@@ -113,7 +113,7 @@ function load_bugs() {
 function enter_bugs() {
     var ladybug, ant, bee;
     var i = parseInt(Math.random() * 3); //random integer
-    var x = (Math.floor((Math.random() * 260))+10);
+    var x = (Math.floor((Math.random() * 380))+10);
     bugs = [ladybug, ant, bee]; //array of bug
     bug = ['ladybug', 'ant', 'bee'];
     
@@ -125,11 +125,14 @@ function enter_bugs() {
     bugs_id.push(num_bugs);
     num_bugs++;
     canvas.style.position = "absolute";
-    canvas.style.width = "389px";
+    canvas.style.width = "30px";
+    canvas.style.height = "30px";
     var context = canvas.getContext("2d");
     
     if (bugs[i].complete) { //image loaded
-        context.drawImage(bugs[i], x, 40, 20, 20);
+        canvas.style.left = x+"px";
+        canvas.style.top = "40px";
+        context.drawImage(bugs[i], 0, 0, 150, 150);
         document.body.appendChild(canvas);
         clearInterval(int);
         move_bug();
@@ -137,7 +140,9 @@ function enter_bugs() {
     }
     else {
         bugs[i].onload = function() {
-            context.drawImage(bugs[i], x, 40, 20, 20);
+            canvas.style.left = x+"px";
+            canvas.style.top = "40px";
+            context.drawImage(bugs[i], 0, 0, 150, 150);
             document.body.appendChild(canvas);
             clearInterval(int);
             move_bug();
@@ -149,16 +154,20 @@ function enter_bugs() {
 function move_bug() {
     console.log("in move_bug");
     for (var b=0; b<bugs_id.length; b++) {
+        var bug_elt, bug_position, closest_food_id, food_elt, food_position, ctx;
         console.log("there are "+bugs_id[b]);
-        var bug_elt = document.getElementById(bugs_id[b]);
-        var bug_position = position(bug_elt);
+        bug_elt = document.getElementById(bugs_id[b]); //canvas for bug
+        bug_position = position(bug_elt);
         console.log("bug "+b +"is at x= "+bug_position.x+" y="+bug_position.y);
-        var closest_id = closest_food(bug_position); //id of the closest food
+        closest_food_id = closest_food(bug_position); //id of the closest food
         
         food_distance = []; //clear food distance array
+        food_elt = document.getElementById(closest_food_id);
+        food_position = position(food_elt);
         
-        // TODO
-        // move to the food determined by closest_id
+        ctx = bug_elt.getContext("2d");
+        ctx.moveTo(food_position.x, food_position.y); //move bug to closest food
+        
     }
 }
 
@@ -188,7 +197,7 @@ function position(elt) {
     var x = 0;
     var y = 0;
     
-    while (elt) {
+    while (elt) { // TODO need to stop a loop before
         x += (elt.clientLeft + elt.offsetLeft - elt.scrollLeft);
         y += (elt.clientTop + elt.offsetTop - elt.scrollTop);
         console.log("to and bottom are "+x+" "+y);
@@ -223,6 +232,21 @@ function min_distance_id() {
         return foods_id[curr];
     }
 }
+
+document.addEventListener('click', function(e) {
+                          var id_clicked = e.target.id;
+                          alert(id_clicked);
+                          if (bugs_id.indexOf(id_clicked) != -1) { //a bug was clicked
+                            remove_bug(id_clicked);
+                          } // else do nothing
+                          });
+
+function remove_bug(bug) {
+    // TODO
+    // bug is the id, use that to access canvas and remove it
+    //remove it from bugs_id array also.
+}
+
 
 function clicked_1() {
     is_1 = 1;
