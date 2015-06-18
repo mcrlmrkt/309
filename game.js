@@ -44,7 +44,7 @@ function enter_foods(i) {
     var banana, cupcake, apple, burger, donut;
     var foods = [banana, cupcake, apple, burger, donut]; //array of food
     var food = ['banana', 'cupcake', 'apple', 'burger', 'donut'];
-    var y = (Math.floor((Math.random() * 540)) + 10);
+    var y = (Math.floor((Math.random() * 540)) + 20);
     var x = (Math.floor((Math.random() * 260))+10);
     foods[i] = new Image();
     foods_id[i]=food[i];
@@ -67,14 +67,17 @@ function enter_foods(i) {
 function timer() {
     var display = document.querySelector('#timer'),
         countdown = document.getElementById("timer");
+    
     interval = setInterval(function(){
-        if (time == 0){
-            if (win == true){
+        if (time == 0){         // TODO
+            if (win == true){ //foods_id.length > 0 (there are still food left)
                 document.getElementById("win").style.display = "block";
                            game_play = 0;
+                           update_hs();
             } else {
                  document.getElementById("lose").style.display = "block";
                            game_play = 0;
+                           update_hs();
             }
                            clearInterval(int);
         } else {
@@ -106,14 +109,19 @@ function start() {
 function pause_game() {
     clearTimeout(interval);
     clearInterval(int);
-    document.getElementById("paused").style.display = "block";
-    game_play = 0;
+    if (document.getElementById("pause_button").innerHTML == "PAUSE") {
+        document.getElementById("pause_button").innerHTML="PLAY";
+        game_play = 0;
+    }
+    else {
+        document.getElementById("pause_button").innerHTML="PAUSE";
+        resume_game();
+    }
 }
 
 function resume_game(){
     timer();
     load_bugs();
-    document.getElementById("paused").style.display = "none";
     game_play = 1;
 }
 
@@ -290,7 +298,8 @@ function remove_elt(elt, array, id, type) { //type is either "food" or "bug_type
         else { //ant
             curr_score+=ant_score;
         }
-        
+        document.getElementById("score").innerHTML="SCORE:"+curr_score;
+        document.getElementById("score").style.fontSize = "25px";
         console.log("score is "+curr_score);
     }
     
@@ -301,8 +310,6 @@ function remove_elt(elt, array, id, type) { //type is either "food" or "bug_type
     }
     
 }
-
-
 
 function clicked_1() {
     is_1 = 1;
