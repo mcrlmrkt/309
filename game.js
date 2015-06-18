@@ -281,11 +281,11 @@ function remove_elt(elt, array, id, type) { //type is either "food" or "bug_type
     // remove canvas
     delete document.body.elt;
     
-    if (type == "bug") { // need to update score
+    if (type == "bug") {
         console.log("it is a bug with id "+id);
         document.body.removeChild(elt);
         //need to update curr high score first
-        //check what id starts with
+        //check first letter of id
         var first_char = id.substring(0, 1);
         
         if (first_char == "b") { //bee
