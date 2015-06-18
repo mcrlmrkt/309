@@ -3,7 +3,7 @@ var time = 60,
     interval,
     win = false;
 
-var game_play = 0;
+var game_play = 0, game_over = 0;
 
 var bee_score = 1, ladybug_score = 3, ant_score = 5;
 var curr_score = 0;
@@ -44,7 +44,7 @@ function enter_foods(i) {
     var banana, cupcake, apple, burger, donut;
     var foods = [banana, cupcake, apple, burger, donut]; //array of food
     var food = ['banana', 'cupcake', 'apple', 'burger', 'donut'];
-    var y = (Math.floor((Math.random() * 540)) + 20);
+    var y = (Math.floor((Math.random() * 520)) + 20);
     var x = (Math.floor((Math.random() * 260))+10);
     foods[i] = new Image();
     foods_id[i]=food[i];
@@ -73,10 +73,12 @@ function timer() {
             if (win == true){ //foods_id.length > 0 (there are still food left)
                 document.getElementById("win").style.display = "block";
                            game_play = 0;
+                           game_over = 1;
                            update_hs();
             } else {
                  document.getElementById("lose").style.display = "block";
                            game_play = 0;
+                           game_over = 1;
                            update_hs();
             }
                            clearInterval(int);
@@ -109,11 +111,11 @@ function start() {
 function pause_game() {
     clearTimeout(interval);
     clearInterval(int);
-    if (document.getElementById("pause_button").innerHTML == "PAUSE") {
+    if (document.getElementById("pause_button").innerHTML == "PAUSE" && game_over == 0) {
         document.getElementById("pause_button").innerHTML="PLAY";
         game_play = 0;
     }
-    else {
+    else if (document.getElementById("pause_button").innerHTML == "PLAY" && game_over == 0) {
         document.getElementById("pause_button").innerHTML="PAUSE";
         resume_game();
     }
@@ -134,7 +136,7 @@ function load_bugs() {
 function enter_bugs() {
     var ladybug, ant, bee;
     var i = parseInt(Math.random() * 3); //random integer
-    var x = (Math.floor((Math.random() * 380))+10);
+    var x = (Math.floor((Math.random() * 370))+10);
     bugs = [ladybug, ant, bee]; //array of bug
     bug = ['ladybug', 'ant', 'bee'];
     
