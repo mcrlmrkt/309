@@ -44,7 +44,7 @@ function enter_foods(i) {
     var banana, cupcake, apple, burger, donut;
     var foods = [banana, cupcake, apple, burger, donut]; //array of food
     var food = ['banana', 'cupcake', 'apple', 'burger', 'donut'];
-    var y = (Math.floor((Math.random() * 520)) + 20);
+    var y = (Math.floor((Math.random() * 420)) + 100);
     var x = (Math.floor((Math.random() * 260))+10);
     foods[i] = new Image();
     foods_id[i]=food[i];
@@ -65,7 +65,9 @@ function enter_foods(i) {
 function timer() {
     var display = document.querySelector('#timer'); 
     interval = setInterval(function(){
-        if (time == 0){         // TODO
+        if (time == 0){
+            check_win();
+            clearInterval(int);
             if (win == true){ //foods_id.length > 0 (there are still food left)
                 document.getElementById("win").style.display = "block";
                            game_play = 0;
@@ -87,6 +89,7 @@ function timer() {
 function start() {
     //check if a level is selected
     if (is_1 == 1 || is_2 == 1) {
+        document.getElementById("board").style.display = "block";
         document.getElementById("home_page").style.display = "none";
         document.getElementById("game").style.display = "block";
         document.getElementById("menu_bar").style.display = "block";
@@ -98,8 +101,8 @@ function start() {
     else {
         document.getElementById("pick_level").style.display = "block";
         var pick_level = setTimeout(function(){
-                                    document.getElementById("pick_level").style.display = "none";
-                                    }, 2000);
+            document.getElementById("pick_level").style.display = "none";
+            }, 2000);
     }
 }
 
