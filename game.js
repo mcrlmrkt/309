@@ -250,7 +250,9 @@ function unclicked_1() {
 function clicked_2() {
     is_2 = 1;
     var level = document.getElementById("level2");
+    var board = document.getElementById("board");
     level.style.color = "#fff1a9";
+    board.style.backgroundColor = "#F8DDD7";
     is_1 = 0;
     unclicked_1();
     display_hs();
