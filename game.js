@@ -81,7 +81,7 @@ function timer() {
             check_win();
             clearInterval(int);
             update_hs();
-            hs_popup();
+            score_popup();
             if (win == true){ //foods_id.length > 0 (there are still food left)
                 document.getElementById("win").style.display = "block";
                            game_play = 0;
@@ -255,13 +255,10 @@ function closest_food(bug_position) {
             num_foods--;//decrease total num of food.
             f--;
         }
-        
         else { // calculate the distance between bug and food and store in food_distance
             food_distance.push(calculate_distance(bug_position, food_position));
         }
-        
     }
-    
     return min_distance_id(food_distance); //return the closest food id eg burger
     
 }
@@ -398,18 +395,10 @@ function update_hs() {
     }
 }
 
-function hs_popup(){
-    if (level == 1){
-        if (win == true){
-            document.getElementsByClassName("hs_popup")[1].innerHTML = "HIGHSCORE: " + hs_1;
-        } else {
-            document.getElementsByClassName("hs_popup")[0].innerHTML = "HIGHSCORE: " + hs_1;
-        }    
-    } else if (level == 2){ 
-        if (win == true){
-            document.getElementsByClassName("hs_popup")[1].innerHTML = "HIGHSCORE: " + hs_2;
-        } else {
-            document.getElementsByClassName("hs_popup")[0].innerHTML = "HIGHSCORE: " + hs_2;
-        } 
-    }
+function score_popup(){
+    if (win == true){
+        document.getElementsByClassName("hs_popup")[1].innerHTML = "SCORE: " + score;
+    } else {
+        document.getElementsByClassName("hs_popup")[0].innerHTML = "SCORE: " + score;
+    }    
 }
