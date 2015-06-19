@@ -3,36 +3,49 @@ var time = 60,
     interval,
     win = false;
 
+var hs_1 = localStorage.getItem("highscore1"), // level 1 high score
+    hs_2 = localStorage.getItem("highscore2"); // level 2 high score
+
 var game_play = 0, game_over = 0;
 
-var bee_score = 1, ladybug_score = 3, ant_score = 5;
-var curr_score = 0;
+var bee_score = 1, 
+    ladybug_score = 3, 
+    ant_score = 5;
+
 var food_type = "food", bug_type = "bug";
 
 var canvas,
     context,
-    j=0; //for load_foods
-var food = ['banana', 'cupcake', 'apple', 'burger', 'donut'];
-var num_foods = 0;
+    food = ['banana', 'cupcake', 'apple', 'burger', 'donut'],
+    num_foods = 0;
 
 var int;
 
-var bugs_img = []; // for load_bugs
+//Make an array of bugs with 3 ladybugs and ants and 4 bees (for probability)
+var ladybug = new Image(),
+    ant = new Image(),
+    bee = new Image();
+ladybug.src = 'ladybug.png';
+ant.src = 'ant.png';
+bee.src = 'bee.png';
+bugs = [ladybug, ladybug, ladybug, ant, ant, ant, bee, bee, bee, bee];
+
 var bugs_id_array = []; // remove id if bug dies
-//var bugs_type = []; // store the type of the bug will have same index as the bug_id one
 var bugs_id = 0; //unique id for each bug
 var num_bugs = 0; //number of bugs added and removed
 
 var food_distance = []; //all food available on the board distances wrt a bug
 var foods_id = []; //remove id if food eaten
 
-//Level 1 variables
-var is_1 = 0; // if level one is selected is_1=1
-var hs_1 = 0; // level 1 high score
+//Level identifier
+var level = 0;
 
-//Level 2 variable
-var is_2 = 0; // if level two is selected is_2=1
-var hs_2 = 0; // level 2 high score
+window.onload = function(){
+    document.getElementById("hs1").style.display = "none";
+    document.getElementById("hs2").style.display = "none";
+    document.getElementById("hs1").innerHTML = hs_1;
+    document.getElementById("hs2").innerHTML = hs_2;
+}
 
 function load_foods() {
     for (var i =0; i<5; i++) {
@@ -43,7 +56,6 @@ function load_foods() {
 function enter_foods(i) {
     var banana, cupcake, apple, burger, donut;
     var foods = [banana, cupcake, apple, burger, donut]; //array of food
-    var food = ['banana', 'cupcake', 'apple', 'burger', 'donut'];
     var y = (Math.floor((Math.random() * 420)) + 100);
     var x = (Math.floor((Math.random() * 260))+10);
     foods[i] = new Image();
@@ -68,16 +80,16 @@ function timer() {
         if (time == 0){
             check_win();
             clearInterval(int);
+            update_hs();
+            hs_popup();
             if (win == true){ //foods_id.length > 0 (there are still food left)
                 document.getElementById("win").style.display = "block";
                            game_play = 0;
                            game_over = 1;
-                           update_hs();
             } else {
                  document.getElementById("lose").style.display = "block";
                            game_play = 0;
                            game_over = 1;
-                           update_hs();
             }
         } else {
             time--;
@@ -87,8 +99,9 @@ function timer() {
 }
 
 function start() {
+    document.getElementById("score").innerHTML = 'score:'+score;
     //check if a level is selected
-    if (is_1 == 1 || is_2 == 1) {
+    if (level != 0) {
         document.getElementById("board").style.display = "block";
         document.getElementById("home_page").style.display = "none";
         document.getElementById("game").style.display = "block";
@@ -106,15 +119,43 @@ function start() {
     }
 }
 
+function restart(){
+    time = 60; //reset time
+    score = 0; //reset score
+    clearInterval(interval); //clear the timer
+    update_hs(); //update highscore
+    start(); //start game
+
+    document.getElementById("score").innerHTML = 'score:'+score; //update score on screen
+    document.getElementById("win").style.display = 'none'; //hide popup win
+    document.getElementById("lose").style.display = 'none'; //hide popup lose
+
+    //clear the screen of all bugs
+    for (var i=0; i < bugs_id_array.length; i++){
+        var elt = document.getElementById(bugs_id_array[i]);
+        delete document.body.elt;
+        document.body.removeChild(elt);
+    }
+    bugs_id_array = []; //reset bugs in the screen
+    game_over = 0;
+}
+
+function exit(){
+    window.location.reload(); //refresh page
+    update_hs(); //update high score
+}
+
 function pause_game() {
     clearTimeout(interval);
     clearInterval(int);
     if (document.getElementById("pause_button").innerHTML == "PAUSE" && game_over == 0) {
         document.getElementById("pause_button").innerHTML="PLAY";
         game_play = 0;
+        document.getElementById("paused").style.display = "block";
     }
     else if (document.getElementById("pause_button").innerHTML == "PLAY" && game_over == 0) {
         document.getElementById("pause_button").innerHTML="PAUSE";
+        document.getElementById("paused").style.display = "none";
         resume_game();
     }
 }
@@ -132,15 +173,10 @@ function load_bugs() {
 }
 
 function enter_bugs() {
-    var ladybug, ant, bee;
-    var i = parseInt(Math.random() * 3); //random integer
+    var i = parseInt(Math.random() * 10); //random integer
     var x = (Math.floor((Math.random() * 370))+10);
-    bugs = [ladybug, ant, bee]; //array of bug
-    bug = ['ladybug', 'ant', 'bee'];
-    
-    bugs[i] = new Image();
-    bugs_img.push(bugs[i]);
-    bugs[i].src = bug[i] + ".png";
+    bug = ['ladybug','ladybug','ladybug','ant','ant','ant','bee','bee','bee','bee'];
+
     var canvas = document.createElement('canvas');
     canvas.setAttribute('id', (bug[i]+bugs_id));
     bugs_id_array.push(bug[i]+bugs_id);
@@ -155,7 +191,7 @@ function enter_bugs() {
     if (bugs[i].complete) { //image loaded
         canvas.style.left = x+"px";
         canvas.style.top = "40px";
-        context.drawImage(bugs[i], 0, 0, 150, 150);
+        context.drawImage(bugs[i], 0, 0, 130, 120);
         document.body.appendChild(canvas);
         clearInterval(int);
         move_bug();
@@ -165,7 +201,7 @@ function enter_bugs() {
         bugs[i].onload = function() {
             canvas.style.left = x+"px";
             canvas.style.top = "40px";
-            context.drawImage(bugs[i], 0, 0, 150, 150);
+            context.drawImage(bugs[i], 0, 0, 130, 120);
             document.body.appendChild(canvas);
             clearInterval(int);
             move_bug();
@@ -174,6 +210,7 @@ function enter_bugs() {
     }
 }
 
+//todo
 function move_bug() {
     console.log("in move_bug");
     for (var b=0; b<bugs_id_array.length; b++) {
@@ -229,7 +266,6 @@ function closest_food(bug_position) {
     
 }
 
-
 function position(elt) {
     console.log("in position");
     var x = 0;
@@ -276,16 +312,15 @@ function min_distance_id() {
 }
 
 document.addEventListener('click', function(e) {
-                          if (game_play == 1) { //mouse is clickable only when status of game is play.
-                            var id_clicked = e.target.id;
-                            console.log("clicked "+id_clicked);
-                            if (bugs_id_array.indexOf(id_clicked) != -1) { //a bug was clicked
-                                var bug_elt = document.getElementById(id_clicked);
-                                remove_elt(bug_elt, bugs_id_array, id_clicked, bug_type);
-                          
-                            } // else do nothing
-                          }
-                          });
+    if (game_play == 1) { //mouse is clickable only when status of game is play.
+        var id_clicked = e.target.id;
+        console.log("clicked "+id_clicked);
+        if (bugs_id_array.indexOf(id_clicked) != -1) { //a bug was clicked
+            var bug_elt = document.getElementById(id_clicked);
+            remove_elt(bug_elt, bugs_id_array, id_clicked, bug_type);
+        } // else do nothing
+    }
+});
 
 function remove_elt(elt, array, id, type) { //type is either "food" or "bug_type";
     console.log("in remove elt, type is "+type);
@@ -300,18 +335,17 @@ function remove_elt(elt, array, id, type) { //type is either "food" or "bug_type
         var first_char = id.substring(0, 1);
         
         if (first_char == "b") { //bee
-            curr_score+=bee_score;
+            score+=bee_score;
         }
-        
         else if (first_char == "l") { //ladybug
-            curr_score+=ladybug_score;
+            score+=ladybug_score;
         }
         else { //ant
-            curr_score+=ant_score;
+            score+=ant_score;
         }
-        document.getElementById("score").innerHTML="SCORE:"+curr_score;
+        document.getElementById("score").innerHTML="score:"+score;
         document.getElementById("score").style.fontSize = "25px";
-        console.log("score is "+curr_score);
+        console.log("score is "+score);
     }
     
     var index = array.indexOf(id);
@@ -323,59 +357,59 @@ function remove_elt(elt, array, id, type) { //type is either "food" or "bug_type
 }
 
 function clicked_1() {
-    is_1 = 1;
-    var level = document.getElementById("level1");
-    level.style.color = "#fff1a9";
-    is_2 = 0;
+    level = 1;
+    var level1 = document.getElementById("level1");
+    level1.style.color = "#fff1a9";
     unclicked_2();
-    display_hs();
+    document.getElementById("hs2").style.display = "none";
+    document.getElementById("hs1").style.display = "inline-block";
 }
 
 function unclicked_1() {
-    var level = document.getElementById("level1");
-    level.style.color = "#373947";
+    var level1 = document.getElementById("level1");
+    level1.style.color = "#373947";
 }
 
 function clicked_2() {
-    is_2 = 1;
-    var level = document.getElementById("level2");
+    level = 2;
+    var level2 = document.getElementById("level2");
     var board = document.getElementById("board");
-    level.style.color = "#fff1a9";
+    level2.style.color = "#fff1a9";
     board.style.backgroundColor = "#F8DDD7";
-    is_1 = 0;
+    document.getElementById("hs1").style.display = "none";
+    document.getElementById("hs2").style.display = "inline-block";
     unclicked_1();
-    display_hs();
 }
 
 function unclicked_2() {
-    var level = document.getElementById("level2");
-    level.style.color = "#373947";
+    var level2 = document.getElementById("level2");
+    level2.style.color = "#373947";
 }
 
-function display_hs() {
-    var hs = document.getElementById("high_score");
-    if (is_1 == 1) {
-        hs.style.fontSize = "30px";
-        hs.innerHTML = hs_1;
-    }
-    else if (is_2 == 1) {
-        hs.style.fontSize = "30px";
-        hs.innerHTML = hs_2;
-    }
-}
-
-// TODO call update hs when game over or paused/win/lose game AND reset curr_score
-
-// updating the high score
 function update_hs() {
-    if (is_1 ==1 ) {
-        if (hs_1 <= curr_score) {
-            hs_1 = curr_score;
+    if (level == 1 ) {
+        if (hs_1 <= score) {
+            localStorage.setItem("highscore1", score);    
+        }
+    } else if (level == 2) { //level 2
+        if (hs_2 <= score) {
+            localStorage.setItem("highscore2", score);
         }
     }
-    else { //level 2
-        if (hs_2 <= curr_score) {
-            hs_2 = curr_score;
-        }
+}
+
+function hs_popup(){
+    if (level == 1){
+        if (win == true){
+            document.getElementsByClassName("hs_popup")[1].innerHTML = "HIGHSCORE: " + hs_1;
+        } else {
+            document.getElementsByClassName("hs_popup")[0].innerHTML = "HIGHSCORE: " + hs_1;
+        }    
+    } else if (level == 2){ 
+        if (win == true){
+            document.getElementsByClassName("hs_popup")[1].innerHTML = "HIGHSCORE: " + hs_2;
+        } else {
+            document.getElementsByClassName("hs_popup")[0].innerHTML = "HIGHSCORE: " + hs_2;
+        } 
     }
 }

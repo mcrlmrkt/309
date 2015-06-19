@@ -8,10 +8,14 @@
 	<title>Tap Tap Bug</title>
 </head>
 <header>
-	<div id="menu_bar" onload="timer()">
-		<span id="timer">60sec</span>
-		<button id="pause_button" onclick="pause_game()">PAUSE</button>
-		<span id="score"><h6>SCORE:</h6></span>
+	<div id="menu_bar">
+		<table cellpadding="0px;">
+			<tr>
+				<td id="timer">60sec</td>
+				<td id="pause_play"><button id="pause_button" onclick="pause_game()">PAUSE</button></td>
+				<td id="score"></td>
+			</tr>
+		</table>
 	</div>
 </header>
 <body>
@@ -26,16 +30,23 @@
 			<button id="start" onclick="start()">START</button>
 		</center>
 		<span id="hs"><h4>HIGH SCORE:</h4></span>
-		<span id="high_score"><h4></h4></span>
+		<span id="hs1">0</span>
+		<span id="hs2">0</span>
 	</div>
 
 	<div id="game">
-		<div id="lose" class="popup"><h1>YOU LOSE</h1></div>
-		<div id="win" class="popup"><h1>YOU WIN</h1></div>
-		<!--<div id="paused" class="popup">
-			<button id="resume_button" onclick="resume_game()">
-				<h4>CLICK TO CONTINUE</h4>
-			</button> -->
+		<div id="paused" class="popup"><h1>PAUSED</h1></div>
+		<div id="lose" class="popup">
+			<h1>YOU LOSE</h1>
+			<span class="hs_popup"></span><br>
+			<button id="restart" onclick="restart()">RESTART</button>
+			<button id="exit" onclick="exit()">EXIT</button>
+		</div>
+		<div id="win" class="popup">
+			<h1>YOU WIN</h1>
+			<span class="hs_popup"></span><br>
+			<button id="restart" onclick="restart()">RESTART</button>
+			<button id="exit" onclick="exit()">EXIT</button>
 		</div>
 		<div id="board">
 			<canvas id="banana" width="21px" height="21px"></canvas>
