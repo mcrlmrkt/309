@@ -8,17 +8,13 @@ var hs_1 = localStorage.getItem("highscore1"), // level 1 high score
 
 var game_play = 0, game_over = 0;
 
-var bee_score = 1, 
-    ladybug_score = 3, 
-    ant_score = 5;
-
 var food_type = "food", bug_type = "bug";
 
 var canvas,
-    context,
-    num_foods = 0;
+    context;
 
-var int;
+var int,
+    moving;
 
 //our canvas for drawing food
 var canvas_food = document.getElementById("viewport");
@@ -27,19 +23,31 @@ var context_food = canvas_food.getContext("2d");
 var canvas_bug = document.getElementById("viewport_bugs");
 var context_bug = canvas_bug.getContext("2d");
 
+//Make and array of food, preloaded
+var banana = new Image();
+var cupcake = new Image();
+var apple = new Image();
+var burger = new Image();
+var donut = new Image();
+banana.src = 'banana.png';
+cupcake.src = 'cupcake.png';
+apple.src = 'apple.png';
+burger.src = 'burger.png';
+donut.src = 'donut.png';
+var foods = [banana, cupcake, apple, burger, donut]; //array of food
+
+
 //Make an array of bugs with 3 ladybugs and ants and 4 bees (for probability)
 var ladybug = new Image(),
     ant = new Image(),
     bee = new Image();
-
-
 ladybug.crossOrigin="anonymous";
 ant.crossOrigin="anonymous";
 bee.crossOrigin="anonymous";
 
-ladybug.src = "https://dl.dropboxusercontent.com/s/0qle40cjndr99h6/ladybug.png?dl=0";
-ant.src = "https://dl.dropboxusercontent.com/s/a9olz98gd0o9za5/ant.png?dl=0";
-bee.src = "https://dl.dropboxusercontent.com/s/89vyr3p4h0d5ti9/bee.png?dl=0";
+ladybug.src = "https://dl.dropboxusercontent.com/s/nvxqd82lqem8hv9/ladybug.png?dl=0";
+ant.src = "https://dl.dropboxusercontent.com/s/bwe0oeqyoc6fvp9/ant.png?dl=0";
+bee.src = "https://dl.dropboxusercontent.com/s/ibozg4mfpld1q4a/bee.png?dl=0";
 bugs = [ladybug, ladybug, ladybug, ant, ant, ant, bee, bee, bee, bee];
 
 var bugs_id_array = []; // remove id if bug dies
@@ -49,7 +57,7 @@ var num_bugs = 0; //number of bugs added and removed
 var foods_id = ['banana', 'cupcake', 'apple', 'burger', 'donut']; //remove id if food eaten
 var food_x = [];
 var food_y = [];
-var num_foods;
+var num_foods = 5;
 
 //Level identifier
 var level = 0;
@@ -59,26 +67,12 @@ window.onload = function(){
     document.getElementById("hs2").style.display = "none";
     document.getElementById("hs1").innerHTML = hs_1;
     document.getElementById("hs2").innerHTML = hs_2;
-    enter_foods();
-}
+};
 
 function enter_foods() {
-    var banana = new Image();
-    var cupcake = new Image();
-    var apple = new Image();
-    var burger = new Image();
-    var donut = new Image();
-    banana.src = "banana.png";
-    cupcake.src = "cupcake.png";
-    apple.src = "apple.png";
-    burger.src = "burger.png";
-    donut.src = "donut.png";
-    var foods = [banana, cupcake, apple, burger, donut]; //array of food
-
     var y, x;
 
     for (var i=0;i<5;i++){
-        num_foods++;
         y = (Math.floor((Math.random() * 420)) + 100);
         x = (Math.floor((Math.random() * 260))+10);
         context_food.drawImage(foods[i], x, y, 20, 20);
@@ -91,12 +85,13 @@ function enter_foods() {
 function timer() {
     var display = document.querySelector('#timer'); 
     interval = setInterval(function(){
-        if (time == 0){
+        if (time == 0 || game_over == 1){
             check_win();
             clearInterval(int);
+            clearTimeout(moving);
             update_hs();
             score_popup();
-            if (win == true){
+            if (win == true){ //foods_id.length > 0 (there are still food left)
                 document.getElementById("win").style.display = "block";
                            game_play = 0;
                            game_over = 1;
@@ -105,7 +100,7 @@ function timer() {
                            game_play = 0;
                            game_over = 1;
             }
-        } else {
+        } else if (game_over == 0){
             time--;
             display.textContent = time + 'sec';
         }
@@ -122,8 +117,8 @@ function start() {
         document.getElementById("menu_bar").style.display = "block";
         game_play = 1;
         timer();
-        enter_foods();
         load_bugs();
+        enter_foods();
     }
     else {
         document.getElementById("pick_level").style.display = "block";
@@ -138,21 +133,18 @@ function restart(){
     score = 0; //reset score
     context_food.clearRect(0, 0, 400, 600);
     context_bug.clearRect(0, 0, 400, 600);
+    num_foods = 5;
+    food_x = [];
+    food_y = [];
     clearInterval(interval); //clear the timer
     update_hs(); //update highscore
     start(); //start game
+    load_bugs();
 
     document.getElementById("score").innerHTML = 'score:'+score; //update score on screen
     document.getElementById("win").style.display = 'none'; //hide popup win
     document.getElementById("lose").style.display = 'none'; //hide popup lose
-
-    //clear the screen of all bugs
-    for (var i=0; i < bugs_id_array.length; i++){
-        var elt = document.getElementById(bugs_id_array[i]);
-        delete document.body.elt;
-        document.body.removeChild(elt);
-    }
-    bugs_id_array = []; //reset bugs in the screen
+    
     game_over = 0;
 }
 
@@ -164,6 +156,7 @@ function exit(){
 function pause_game() {
     clearTimeout(interval);
     clearInterval(int);
+    clearTimeout(moving);
     if (document.getElementById("pause_button").innerHTML == "PAUSE" && game_over == 0) {
         document.getElementById("pause_button").innerHTML="PLAY";
         game_play = 0;
@@ -183,40 +176,132 @@ function resume_game(){
 }
 
 function load_bugs() {
-    var random = ((parseInt(Math.random() * 2000)) + 1000);
-    console.log("random is "+random);
-    int = setInterval(enter_bugs, random);
+    if (game_over == 0){
+        var random = ((parseInt(Math.random() * 2000)) + 1000);
+        int = setInterval(enter_bugs, random);
+    }
 }
 
 function enter_bugs() {
     var i = parseInt(Math.random() * 10); //random integer
     var x = (Math.floor((Math.random() * 370))+10);
     bug = ['ladybug','ladybug','ladybug','ant','ant','ant','bee','bee','bee','bee'];
-
-    var canvas = document.getElementById('viewport_bugs');
-    var context = canvas.getContext("2d");
-    num_bugs++;
+    var speed = check_speed(bug[i]);
     
+    num_bugs++;
+    var test = calculate_distance(x, 0);
+
     if (bugs[i].complete) { //image loaded
-        context.drawImage(bugs[i], x, 0, 20, 20);
+        context_bug.drawImage(bugs[i], x, 0, 20, 20);
+         console.log("bug is "+ bug[i]);
         clearInterval(int);
-        move_bug();
         load_bugs();
-    }
-    else {
+        move_bug(bugs[i], x, 0, test,speed);
+    } else {
         bugs[i].onload = function() {
-            context.drawImage(bugs[i], x, 0, 20, 20);
+            context_bug.drawImage(bugs[i], x, 0, 30, 30);
+            console.log("bug is "+ bug[i]);
             clearInterval(int);
-            move_bug();
             load_bugs();
+            move_bug(bugs[i], x, 0, test,speed);
         }
     }
+
+    console.log("closest food is "+ foods_id[test]);
+    console.log("coords are "+ food_x[test] +","+ food_y[test]);
 }
 
-function move_bug() {
+function move_bug(bug, x, y, target, speed){
+    var fx = food_x[target];
+    var fy = food_y[target];
 
+    context_bug.clearRect(x,y,20,20);
+    if (x < fx){
+        x++;
+    } else if (x > fx){
+        x--;
+    }
+    if (y < fy){
+        y++;
+    } else if(y > fy){
+        y--;
+    }
+
+    if (fx == x && fy == y && num_foods > 0){
+        context_bug.clearRect(fx,fy,20,20);
+        food_eaten(bug, x, y, target, speed);
+    } else if(num_foods == 0){
+        context_bug.clearRect(fx,fy,20,20);
+        end_game();
+    }
+
+    context_bug.drawImage(bug, x, y, 20, 20);
+        
+    if (game_play = 1){    
+        moving = setTimeout(function() {move_bug(bug,x,y, target, speed)}, speed);
+    }
 }
 
+function end_game(){
+    console.log("game over")
+    check_win();
+    clearInterval(int);
+    update_hs();
+    score_popup();
+    if (win == true){ //num_foods > 0 (there are still food left)
+        document.getElementById("win").style.display = "block";
+                   game_play = 0;
+                   game_over = 1;
+    } else {
+         document.getElementById("lose").style.display = "block";
+                   game_play = 0;
+                   game_over = 1;
+    }
+}
+
+function food_eaten(bug, x, y, target, speed){
+    var fx = food_x[target];
+    var fy = food_y[target];
+
+   if (x == fx && y == fy){
+        console.log(foods_id[target] + " is eaten");
+        context_food.clearRect(fx,fy,20,20);
+        num_foods--;
+        console.log(num_foods + " left");
+        food_x.splice(target, 1);
+        food_y.splice(target, 1);
+        foods_id.splice(target, 1);
+        context_bug.clearRect(x,y,20,20);
+        var target2 = calculate_distance(x, y);
+        move_bug(bug, x, y, target2, speed);
+    }  else if (x != fx && y != fy){
+        move_bug(bug, x, y, target, speed);        
+    }
+}
+
+function check_speed(bug_id){
+    var speed;
+    if (level == 1){
+        if (bug_id == 'bee') { //bee
+            speed = 60;
+        }
+        else if (bug_id == 'ladybug') { //ladybug
+            speed = 50;
+        }
+        else if (bug_id == 'ant'){ //ant
+            speed = 35;
+        }
+    } else if (level == 2){
+        if (bug_id == 'bee') { //bee
+            speed = 50;
+        } else if (bug_id == 'ladybug') { //ladybug
+            speed = 20;
+        } else if (bug_id == 'ant'){ //ant
+            speed = 5;
+        }
+    }
+    return speed;    
+}
 
 function check_win(){
     var num_foods = foods_id.length;
@@ -227,58 +312,17 @@ function check_win(){
     }
 }
 
-function closest_food(bug_position) {
-    //console.log("in closest food");
-    for (var f=0; f<foods_id.length; f++) {
-        //console.log("food length is  "+foods_id.length);
-        var food_elt = document.getElementById(foods_id[f]);
-        var food_position = position(food_elt); //get position for each food
-        //console.log("foods_id at f "+f+" is "+foods_id[f]);
-        //console.log("food is at x= "+food_position.x+" y="+food_position.y);
-        
-        //if both position are the same, then remove food from foods_id
-        if (bug_position.x == food_position.x && bug_position.y == food_position.y) {
-            remove_elt(food_elt, foods_id, foods_id[f], food_type);
-            num_foods--;//decrease total num of food.
-            f--;
-        }
-        else { // calculate the distance between bug and food and store in food_distance
-            food_distance.push(calculate_distance(bug_position, food_position));
-        }
+function calculate_distance(x,y) {
+    var distances = [];
+    var min, food;
+    for (var i=0;i<num_foods;i++){
+        var distance = Math.sqrt(Math.pow((x - food_x[i]), 2) + Math.pow((y - food_y[i]), 2));
+        distances.push(distance);
     }
-    return min_distance_id(food_distance); //return the closest food id eg burger
-    
-}
+    min = Math.min.apply(null, distances);
+    food = distances.indexOf(min);
 
-
-function calculate_distance(bug_position, food_position) {
-    var x1 = bug_position.x;
-    var y1 = bug_position.y;
-    var x2 = food_position.x;
-    var y2 = food_position.y;
-    
-    var distance = Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2));
-    //console.log("distance is "+distance);
-    return distance;
-}
-
-function min_distance_id() {
-    if (food_distance.length == 1) {
-        return foods_id[0];
-    }
-    
-    else {
-        var curr = 0
-        for (var i=1; i<food_distance.length; i++) {
-            if (food_distance[curr] > food_distance[i]) {
-                curr = i;
-            }
-        }
-        return foods_id[curr];
-    }
-    context.drawImage(img, (Math.floor((Math.random() * 370))+1),40, 20, 20);
-    console.log("drawImage "+canvas+" "+context);
-    document.body.appendChild(canvas);  
+    return food;
 }
 
 canvas_bug.addEventListener('mousedown', kill_bugs, false);
@@ -290,7 +334,8 @@ function kill_bugs(event) {
         x-=30;
         y-=30;
         update_score(x-30, y-30);
-        context_bug.clearRect(x-30, y-30, 400, 600);
+        context_bug.clearRect(x-5, y-30, 60, 60);
+        clearTimeout(moving);
         console.log("x:" + x + " y:" + y);
     }
 }
@@ -301,14 +346,14 @@ function update_score(x, y){
     var colour = colour_value(imgData);
     console.log("red is "+colour.red+" blue is "+colour.blue+" green is "+colour.green);
     
-    if (colour.red > 20 && colour.green > 30) { //bee
-        score+=bee_score;
+    if (colour.blue == 0 && colour.green > 0) { //bee
+        score+=1;
     }
-    else if (colour.red > 20) { //ladybug
-        score+=ladybug_score;
+    else if (colour.blue == 0 && colour.green == 0 && colour.red > 0) { //ladybug
+        score+=3;
     }
-    else { //ant
-        score+=ant_score;
+    else if (colour.red > 0 &&  colour.blue > 0 && colour.green > 0){ //ant
+        score+=5;
     }
     document.getElementById("score").innerHTML="score:"+score;
     console.log("score is "+score);
@@ -368,12 +413,10 @@ function update_hs() {
     }
 }
 
-
 function score_popup(){
-
     if (win == true){
         document.getElementsByClassName("hs_popup")[1].innerHTML = "SCORE: " + score;
     } else {
         document.getElementsByClassName("hs_popup")[0].innerHTML = "SCORE: " + score;
-    }
+    }    
 }
