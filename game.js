@@ -31,9 +31,15 @@ var context_bug = canvas_bug.getContext("2d");
 var ladybug = new Image(),
     ant = new Image(),
     bee = new Image();
-ladybug.src = 'ladybug.png';
-ant.src = 'ant.png';
-bee.src = 'bee.png';
+
+
+ladybug.crossOrigin="anonymous";
+ant.crossOrigin="anonymous";
+bee.crossOrigin="anonymous";
+
+ladybug.src = "https://dl.dropboxusercontent.com/s/0qle40cjndr99h6/ladybug.png?dl=0";
+ant.src = "https://dl.dropboxusercontent.com/s/a9olz98gd0o9za5/ant.png?dl=0";
+bee.src = "https://dl.dropboxusercontent.com/s/89vyr3p4h0d5ti9/bee.png?dl=0";
 bugs = [ladybug, ladybug, ladybug, ant, ant, ant, bee, bee, bee, bee];
 
 var bugs_id_array = []; // remove id if bug dies
@@ -62,11 +68,11 @@ function enter_foods() {
     var apple = new Image();
     var burger = new Image();
     var donut = new Image();
-    banana.src = 'banana.png';
-    cupcake.src = 'cupcake.png';
-    apple.src = 'apple.png';
-    burger.src = 'burger.png';
-    donut.src = 'donut.png';
+    banana.src = "banana.png";
+    cupcake.src = "cupcake.png";
+    apple.src = "apple.png";
+    burger.src = "burger.png";
+    donut.src = "donut.png";
     var foods = [banana, cupcake, apple, burger, donut]; //array of food
 
     var y, x;
@@ -90,7 +96,7 @@ function timer() {
             clearInterval(int);
             update_hs();
             score_popup();
-            if (win == true){ //foods_id.length > 0 (there are still food left)
+            if (win == true){
                 document.getElementById("win").style.display = "block";
                            game_play = 0;
                            game_over = 1;
@@ -207,9 +213,10 @@ function enter_bugs() {
     }
 }
 
-function move_bug(){
+function move_bug() {
 
 }
+
 
 function check_win(){
     var num_foods = foods_id.length;
@@ -277,12 +284,46 @@ function min_distance_id() {
 canvas_bug.addEventListener('mousedown', kill_bugs, false);
 
 function kill_bugs(event) {
-    var x = event.x;
-    var y = event.y;
-    x-=30;
-    y-=30;
-    context_bug.clearRect(x-30, y-30, 400, 600);
-    console.log("x:" + x + " y:" + y);
+    if (game_play == 1) {
+        var x = event.x;
+        var y = event.y;
+        x-=30;
+        y-=30;
+        update_score(x-30, y-30);
+        context_bug.clearRect(x-30, y-30, 400, 600);
+        console.log("x:" + x + " y:" + y);
+    }
+}
+
+function update_score(x, y){
+    var ctx = canvas_bug.getContext("2d");
+    var imgData = ctx.getImageData(x+25, y+20, 30, 30).data;
+    var colour = colour_value(imgData);
+    console.log("red is "+colour.red+" blue is "+colour.blue+" green is "+colour.green);
+    
+    if (colour.red > 20 && colour.green > 30) { //bee
+        score+=bee_score;
+    }
+    else if (colour.red > 20) { //ladybug
+        score+=ladybug_score;
+    }
+    else { //ant
+        score+=ant_score;
+    }
+    document.getElementById("score").innerHTML="score:"+score;
+    console.log("score is "+score);
+}
+
+function colour_value(imgData) {
+    var total_red = 0, total_green = 0, total_blue = 0;
+    for (i=0; i<30*4; i+=4) {
+        
+        total_red+=imgData[i];
+        total_green+=imgData[i+1];
+        total_blue+=imgData[i+2];
+        
+    }
+    return { red: Math.floor(total_red/30), green: Math.floor(total_green/30), blue: Math.floor(total_blue/30) };
 }
 
 function clicked_1() {
@@ -327,10 +368,12 @@ function update_hs() {
     }
 }
 
+
 function score_popup(){
+
     if (win == true){
         document.getElementsByClassName("hs_popup")[1].innerHTML = "SCORE: " + score;
     } else {
         document.getElementsByClassName("hs_popup")[0].innerHTML = "SCORE: " + score;
-    }    
+    }
 }
