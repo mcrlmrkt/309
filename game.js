@@ -88,7 +88,7 @@ function timer() {
         if (time == 0 || game_over == 1){
             check_win();
             clearInterval(int);
-            clearTimeout(moving);
+            clearInterval(moving);
             update_hs();
             score_popup();
             if (win == true){ //foods_id.length > 0 (there are still food left)
@@ -134,12 +134,13 @@ function restart(){
     context_food.clearRect(0, 0, 400, 600);
     context_bug.clearRect(0, 0, 400, 600);
     num_foods = 5;
+    foods_id = ['banana', 'cupcake', 'apple', 'burger', 'donut']; //remove id if food eaten
     food_x = [];
     food_y = [];
     clearInterval(interval); //clear the timer
+    clearInterval(int); //clear the timer
     update_hs(); //update highscore
     start(); //start game
-    load_bugs();
 
     document.getElementById("score").innerHTML = 'score:'+score; //update score on screen
     document.getElementById("win").style.display = 'none'; //hide popup win
@@ -169,6 +170,7 @@ function pause_game() {
     }
 }
 
+//need to resume bugs to move
 function resume_game(){
     timer();
     load_bugs();
@@ -176,10 +178,8 @@ function resume_game(){
 }
 
 function load_bugs() {
-    if (game_over == 0){
-        var random = ((parseInt(Math.random() * 2000)) + 1000);
-        int = setInterval(enter_bugs, random);
-    }
+    var random = ((parseInt(Math.random() * 2000)) + 1000);
+    int = setInterval(enter_bugs, random);
 }
 
 function enter_bugs() {
@@ -191,21 +191,11 @@ function enter_bugs() {
     num_bugs++;
     var test = calculate_distance(x, 0);
 
-    if (bugs[i].complete) { //image loaded
-        context_bug.drawImage(bugs[i], x, 0, 20, 20);
-         console.log("bug is "+ bug[i]);
-        clearInterval(int);
-        load_bugs();
-        move_bug(bugs[i], x, 0, test,speed);
-    } else {
-        bugs[i].onload = function() {
-            context_bug.drawImage(bugs[i], x, 0, 30, 30);
-            console.log("bug is "+ bug[i]);
-            clearInterval(int);
-            load_bugs();
-            move_bug(bugs[i], x, 0, test,speed);
-        }
-    }
+    context_bug.drawImage(bugs[i], x, 0, 20, 20);
+    console.log("bug is "+ bug[i]);
+    clearInterval(int);
+    load_bugs();
+    move_bug(bugs[i], x, 0, test, speed);
 
     console.log("closest food is "+ foods_id[test]);
     console.log("coords are "+ food_x[test] +","+ food_y[test]);
@@ -228,11 +218,10 @@ function move_bug(bug, x, y, target, speed){
     }
 
     if (fx == x && fy == y && num_foods > 0){
-        context_bug.clearRect(fx,fy,20,20);
-        food_eaten(bug, x, y, target, speed);
-    } else if(num_foods == 0){
-        context_bug.clearRect(fx,fy,20,20);
-        end_game();
+        food_eaten(x, y, target, speed);
+        target = calculate_distance(x, y);
+    }  else if(num_foods == 0){
+            end_game();
     }
 
     context_bug.drawImage(bug, x, y, 20, 20);
@@ -259,26 +248,22 @@ function end_game(){
     }
 }
 
-function food_eaten(bug, x, y, target, speed){
+function food_eaten(x, y, target, speed){
     var fx = food_x[target];
     var fy = food_y[target];
 
-   if (x == fx && y == fy){
-        console.log(foods_id[target] + " is eaten");
-        context_food.clearRect(fx,fy,20,20);
-        num_foods--;
-        console.log(num_foods + " left");
-        food_x.splice(target, 1);
-        food_y.splice(target, 1);
-        foods_id.splice(target, 1);
-        context_bug.clearRect(x,y,20,20);
-        var target2 = calculate_distance(x, y);
-        move_bug(bug, x, y, target2, speed);
-    }  else if (x != fx && y != fy){
-        move_bug(bug, x, y, target, speed);        
-    }
+    context_bug.clearRect(x,y,20,20);
+    console.log(foods_id[target] + " is eaten");
+    context_food.clearRect(fx,fy,20,20);
+    num_foods--;
+    console.log(num_foods + " left");
+    food_x.splice(target, 1);
+    food_y.splice(target, 1);
+    foods_id.splice(target, 1);
 }
 
+//Check what speed needs to be applied to what kind of bug
+//and what level we are on
 function check_speed(bug_id){
     var speed;
     if (level == 1){
@@ -312,6 +297,8 @@ function check_win(){
     }
 }
 
+//Calculate the closest food to the bug, with x, y as the bug's
+//(x,y) coordinate
 function calculate_distance(x,y) {
     var distances = [];
     var min, food;
@@ -331,11 +318,8 @@ function kill_bugs(event) {
     if (game_play == 1) {
         var x = event.x;
         var y = event.y;
-        x-=30;
-        y-=30;
         update_score(x-30, y-30);
-        context_bug.clearRect(x-5, y-30, 60, 60);
-        clearTimeout(moving);
+        context_bug.clearRect(x-5, y-30, 30, 30);
         console.log("x:" + x + " y:" + y);
     }
 }
